@@ -11,7 +11,7 @@ This is a scoped personal project built to demonstrate full-stack ownership (DB 
 ## Stack
 - **Backend:** FastAPI (Python)
 - **Database:** SQLite
-- **Classification:** OpenAI API, prompt-based classification with guardrails (fixed label set, confidence score, no invented categories)
+- **Classification:** Groq API, prompt-based classification with guardrails (fixed label set, confidence score, no invented categories)
 - **Frontend:** React + Tailwind CSS
 - **Hosting:** TBD — decided after the app is working locally
 
