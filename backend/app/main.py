@@ -24,6 +24,15 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     # Startup
     init_db()
+    # Clear previous classifications for fresh session
+    from app.database import get_db, Classification as ClassificationModel
+    db = next(get_db())
+    try:
+        db.query(ClassificationModel).delete()
+        db.commit()
+        logger.info("Previous classifications cleared for fresh session")
+    finally:
+        db.close()
     # Validate API key
     if not settings.groq_api_key:
         logger.warning("GROQ_API_KEY not configured - classification will return neutral")

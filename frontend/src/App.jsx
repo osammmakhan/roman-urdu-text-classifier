@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import './App.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api'
@@ -15,8 +15,24 @@ function App() {
 
   const labels = ['positive', 'negative', 'neutral', 'unclassifiable']
 
-  useEffect(() => {
-    fetchResults()
+  const fetchResults = useCallback(async () => {
+    setLoadingResults(true)
+    try {
+      const params = new URLSearchParams()
+      if (filterLabel) params.append('label', filterLabel)
+      params.append('limit', '50')
+
+      const response = await fetch(`${API_BASE}/results?${params}`)
+      if (!response.ok) throw new Error('Failed to fetch results')
+
+      const data = await response.json()
+      setResults(data.results)
+      setTotalResults(data.total)
+    } catch (err) {
+      console.error('Failed to fetch results:', err)
+    } finally {
+      setLoadingResults(false)
+    }
   }, [filterLabel])
 
   const classifyText = async () => {
@@ -48,26 +64,6 @@ function App() {
       setError(err.message)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const fetchResults = async () => {
-    setLoadingResults(true)
-    try {
-      const params = new URLSearchParams()
-      if (filterLabel) params.append('label', filterLabel)
-      params.append('limit', '50')
-
-      const response = await fetch(`${API_BASE}/results?${params}`)
-      if (!response.ok) throw new Error('Failed to fetch results')
-
-      const data = await response.json()
-      setResults(data.results)
-      setTotalResults(data.total)
-    } catch (err) {
-      console.error('Failed to fetch results:', err)
-    } finally {
-      setLoadingResults(false)
     }
   }
 

@@ -12,29 +12,33 @@ class ClassificationService:
         self.client = Groq(api_key=settings.groq_api_key) if settings.groq_api_key else None
         self.model = settings.groq_model
         self.valid_labels = settings.classification_labels
-    
+
     def _build_prompt(self, text: str) -> str:
         labels_str = ", ".join(self.valid_labels)
-        return f"""You are a sentiment classifier for Roman Urdu text (Urdu written in Latin script).
+        return f"""You are a precise Roman Urdu sentiment classifier.
 
-Classify the following text into EXACTLY ONE of these labels: {labels_str}
+TASK: Classify the given Roman Urdu text into EXACTLY ONE label: {labels_str}.
 
-Rules:
-1. Return ONLY a valid JSON object with keys: "label" and "confidence"
-2. "label" must be exactly one of: {labels_str}
-3. "confidence" must be a float between 0.0 and 1.0
-4. If the text is empty, gibberish, or cannot be classified, return {{"label": "unclassifiable", "confidence": 0.0}}
-5. Do not add any explanation, reasoning, or extra text
+INSTRUCTIONS:
+1. Output ONLY a JSON object with exactly these keys: "label" and "confidence"
+2. "label" must be one of: {labels_str}
+3. "confidence" must be a number between 0.0 and 1.0
+4. Do NOT include any other text, explanation, reasoning, or formatting
+5. The JSON should be valid and parseable by itself
 
-Text to classify:
+TEXT TO CLASSIFY:
 {text}
 
-JSON response:"""
-    
+OUTPUT JSON ONLY:"""
+
     def _parse_response(self, response_text: str) -> tuple[str, float]:
         """Parse and validate the model response."""
+        # Try to find JSON object in the response
+        text = response_text.strip()
+        
+        # Attempt 1: Direct JSON parse
         try:
-            data = json.loads(response_text.strip())
+            data = json.loads(text)
             label = data.get("label", "").lower().strip()
             confidence = float(data.get("confidence", 0.0))
             
@@ -47,51 +51,52 @@ JSON response:"""
             confidence = max(0.0, min(1.0, confidence))
             
             return label, confidence
-            
-        except (json.JSONDecodeError, ValueError, KeyError) as e:
-            logger.error(f"Failed to parse model response: {response_text}, error: {e}")
-            return "neutral", 0.5
-    
-    async def classify(self, text: str) -> tuple[str, float, str]:
-        """
-        Classify Roman Urdu text.
-        Returns: (label, confidence, raw_output)
-        """
-        # Guardrail: empty or whitespace-only text
-        if not text or not text.strip():
-            return "unclassifiable", 0.0, "Empty input"
+        except (json.JSONDecodeError, ValueError, KeyError):
+            pass
         
-        # Guardrail: text too short (likely gibberish)
-        if len(text.strip()) < 3:
-            return "unclassifiable", 0.0, "Input too short"
-        
-        if not self.client:
-            logger.warning("Groq client not configured, returning neutral")
-            return "neutral", 0.5, "Groq not configured"
-        
-        prompt = self._build_prompt(text.strip())
-        
+        # Attempt 2: Extract JSON from text (look for { ... })
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are a precise sentiment classifier. Output only valid JSON."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.0,
-                max_tokens=100,
-                response_format={"type": "json_object"}
-            )
+            start = text.index('{')
+            end = text.rindex('}') + 1
+            json_str = text[start:end]
+            data = json.loads(json_str)
+            label = data.get("label", "").lower().strip()
+            confidence = float(data.get("confidence", 0.0))
             
-            raw_output = response.choices[0].message.content
-            logger.info(f"Raw model output: {raw_output}")
+            # Validate label
+            if label not in self.valid_labels and label != "unclassifiable":
+                logger.warning(f"Invalid label from model: {label}, defaulting to neutral")
+                return "neutral", 0.5
             
-            label, confidence = self._parse_response(raw_output)
-            return label, confidence, raw_output
+            # Validate confidence
+            confidence = max(0.0, min(1.0, confidence))
             
-        except Exception as e:
-            logger.error(f"Groq API error: {e}")
-            return "neutral", 0.5, f"API error: {str(e)}"
+            return label, confidence
+        except (json.JSONDecodeError, ValueError, KeyError, IndexError):
+            pass
+        
+        # Attempt 3: Look for label and confidence patterns in text
+        try:
+            import re
+            label_match = re.search(r'"label"\s*:\s*"([^"]+)"', text)
+            conf_match = re.search(r'"confidence"\s*:\s*([0-9.]+)', text)
+            
+            if label_match and conf_match:
+                label = label_match.group(1).lower().strip()
+                confidence = float(conf_match.group(1))
+                
+                # Validate label
+                if label not in self.valid_labels and label != "unclassifiable":
+                    return "neutral", 0.5
+                
+                confidence = max(0.0, min(1.0, confidence))
+                return label, confidence
+        except (ValueError, IndexError, re.error):
+            pass
+        
+        # Fallback: default to neutral
+        logger.error(f"Could not parse model response: {response_text}")
+        return "neutral", 0.5
 
 
 classification_service = ClassificationService()

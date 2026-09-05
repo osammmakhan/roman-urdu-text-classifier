@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class ClassifyRequest(BaseModel):
-    text: str = Field(..., min_length=1, max_length=5000, description="Roman Urdu text to classify")
+    text: str = Field("", min_length=0, max_length=5000, description="Roman Urdu text to classify")
 
 
 class ClassifyResponse(BaseModel):

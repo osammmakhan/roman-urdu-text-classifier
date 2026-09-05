@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     
     # Groq
     groq_api_key: Optional[str] = None
-    groq_model: str = "llama3-8b-8192"
+    groq_model: str = "openai/gpt-oss-20b"
     
     # API
     api_host: str = "0.0.0.0"
