@@ -100,7 +100,7 @@ Implemented in `app/services/classification.py`:
 | gemma2-9b-it | Available but smaller |
 | llama3-70b-8192 | Decommissioned |
 
-**Current**: `llama-3.3-70b-versatile` (configured in `config.py`)
+**Current**: `openai/gpt-oss-20b` (configured in `config.py`)
 
 ### 7. Key Bug Fixes During Development
 

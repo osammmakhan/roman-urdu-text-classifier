@@ -2,14 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg: #ffffff;
+  --bg-surface: #f8fafc;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --positive: #10b981;
+  --neutral: #eab308;
+  --negative: #ef4444;
+}
+
+.dark {
+  --bg: #080f17;
+  --bg-surface: #0f1729;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border: #1a2540;
+  --primary: #10b981;
+  --primary-hover: #34d399;
+  --positive: #10b981;
+  --neutral: #eab308;
+  --negative: #06b6d4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  font-family: 'Geist Variable', 'Geist', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
   min-height: 100vh;
-  box-sizing: border-box;
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

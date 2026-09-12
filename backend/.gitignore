@@ -54,3 +54,6 @@ logs/
 .coverage
 htmlcov/
 .pytest_cache/
+
+# Opencode
+.opencode

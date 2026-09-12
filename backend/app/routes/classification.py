@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 from typing import Optional
 from app.database import get_db
-from app.schemas import ClassifyRequest, ClassifyResponse, ResultsResponse, ClassificationRecord
+from app.schemas import ClassifyRequest, ClassifyResponse, ResultsResponse, ClassificationRecord, Probabilities
 from app.services.classification import classification_service
 from app.database import Classification as ClassificationModel
 from app.rate_limiter import limiter
@@ -15,15 +15,18 @@ router = APIRouter(prefix="/api", tags=["classification"])
 async def classify_text(request: Request, classify_request: ClassifyRequest, db: Session = Depends(get_db)):
     """
     Classify Roman Urdu text sentiment.
-    Returns label (positive/negative/neutral) and confidence score.
+    Returns label, confidence, and probability distribution.
     """
-    label, confidence, raw_output = await classification_service.classify(classify_request.text)
+    label, confidence, probabilities, raw_output = classification_service.classify(classify_request.text)
     
     # Store in database
     classification = ClassificationModel(
         text=classify_request.text,
         label=label,
-        confidence=confidence
+        confidence=confidence,
+        positive_prob=probabilities["positive"],
+        neutral_prob=probabilities["neutral"],
+        negative_prob=probabilities["negative"]
     )
     db.add(classification)
     db.commit()
@@ -32,6 +35,7 @@ async def classify_text(request: Request, classify_request: ClassifyRequest, db:
     return ClassifyResponse(
         label=label,
         confidence=confidence,
+        probabilities=Probabilities(**probabilities),
         raw_output=raw_output
     )
 

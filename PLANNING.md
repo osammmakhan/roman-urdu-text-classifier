@@ -11,7 +11,7 @@ This is a scoped personal project built to demonstrate full-stack ownership (DB 
 ## Stack
 - **Backend:** FastAPI (Python)
 - **Database:** SQLite
-- **Classification:** Groq API (llama-3.3-70b-versatile), prompt-based classification with guardrails (fixed label set, confidence score, no invented categories)
+- **Classification:** Groq API (openai/gpt-oss-20b), prompt-based classification with guardrails (fixed label set, confidence score, no invented categories)
 - **Frontend:** React + Vite + Tailwind CSS v3
 - **Hosting:** TBD — decided after the app is working locally
 
