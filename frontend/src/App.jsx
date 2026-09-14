@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api'
 
@@ -57,11 +57,11 @@ function Header({ dark, setDark }) {
       </div>
       <button
         onClick={() => setDark(!dark)}
-        className="p-2 rounded-lg transition-colors hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50"
+        className="p-2 rounded-lg transition-all duration-200 hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50 hover:scale-110 active:scale-95"
         aria-label="Toggle theme"
       >
         {dark ? (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-300">
             <circle cx="12" cy="12" r="5" />
             <line x1="12" y1="1" x2="12" y2="3" />
             <line x1="12" y1="21" x2="12" y2="23" />
@@ -73,7 +73,7 @@ function Header({ dark, setDark }) {
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
           </svg>
         ) : (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-300">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
           </svg>
         )}
@@ -85,10 +85,10 @@ function Header({ dark, setDark }) {
 function Hero() {
   return (
     <div className="text-center py-10 px-4">
-      <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight mb-3">
+      <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tighter mb-3">
         Roman Urdu Text Classifier
       </h1>
-      <p className="text-[var(--text-muted)] max-w-lg mx-auto">
+      <p className="text-[var(--text-muted)] max-w-[65ch] mx-auto leading-relaxed">
         Classify Roman Urdu text sentiment in real-time.
       </p>
     </div>
@@ -115,13 +115,13 @@ function InputSection({ inputText, setInputText, onSubmit, loading }) {
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           rows={5}
-          className="w-full px-5 py-4 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-all resize-none font-body text-sm leading-relaxed"
+          className="w-full px-5 py-4 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-all duration-200 resize-none font-body text-sm leading-relaxed"
           placeholder="e.g., main khush hun, yeh bahut bura hai, theek thak hai"
         />
         {inputText.length > 0 && (
           <button
             onClick={() => setInputText('')}
-            className="absolute bottom-3 right-3 flex items-center gap-1 px-3 py-1.5 text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text)] bg-[var(--bg)] border border-[var(--border)] rounded-lg transition-colors"
+            className="absolute bottom-3 right-3 flex items-center gap-1 px-3 py-1.5 text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text)] bg-[var(--bg)] border border-[var(--border)] rounded-lg transition-all duration-200 hover:scale-105 active:scale-95"
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -138,7 +138,7 @@ function InputSection({ inputText, setInputText, onSubmit, loading }) {
           <button
             key={prompt}
             onClick={() => handleSampleClick(prompt)}
-            className="px-3 py-1.5 text-xs font-mono text-[var(--text-muted)] bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
+            className="px-3 py-1.5 text-xs font-mono text-[var(--text-muted)] bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg transition-all duration-200 hover:border-[var(--primary)] hover:text-[var(--primary)] hover:scale-105 active:scale-95"
           >
             {prompt}
           </button>
@@ -148,7 +148,7 @@ function InputSection({ inputText, setInputText, onSubmit, loading }) {
       <button
         onClick={onSubmit}
         disabled={loading || !inputText.trim()}
-        className="flex items-center gap-2 px-6 py-3 bg-[var(--primary)] text-white font-display font-medium text-sm rounded-xl hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.97]"
+        className="flex items-center gap-2 px-6 py-3 bg-[var(--primary)] text-white font-display font-medium text-sm rounded-xl transition-all duration-200 hover:bg-[var(--primary-hover)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.97]"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
@@ -160,6 +160,21 @@ function InputSection({ inputText, setInputText, onSubmit, loading }) {
 }
 
 function VerdictCard({ result }) {
+  const [visible, setVisible] = useState(false)
+  const prevResultRef = useRef(null)
+
+  useEffect(() => {
+    if (result && result !== prevResultRef.current) {
+      setVisible(false)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setVisible(true)
+        })
+      })
+      prevResultRef.current = result
+    }
+  }, [result])
+
   if (!result) return null
 
   const colors = LABEL_COLORS[result.label] || LABEL_COLORS.neutral
@@ -177,8 +192,12 @@ function VerdictCard({ result }) {
   const dominant = sorted[0]
 
   return (
-    <div className="max-w-3xl mx-auto px-4 mb-10 animate-fade-in-up">
-      <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6">
+    <div className="max-w-3xl mx-auto px-4 mb-10">
+      <div
+        className={`bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 shadow-lg shadow-black/5 dark:shadow-black/20 transition-all duration-500 ease-out ${
+          visible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-2 scale-[0.98]'
+        }`}
+      >
         <div className="flex items-center justify-between mb-4">
           <span className="font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider">Verdict Assessment</span>
           <span className="font-mono text-xs text-[var(--text-muted)]">Model: gpt-oss-20b</span>
@@ -189,7 +208,7 @@ function VerdictCard({ result }) {
             <span className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
             {result.label.toUpperCase()}
           </span>
-          <span className="font-display text-3xl font-bold tracking-tight">
+          <span className="font-display text-3xl font-bold tracking-tighter">
             {(result.confidence * 100).toFixed(1)}%
           </span>
           <span className="text-[var(--text-muted)] text-sm">Confidence</span>
@@ -203,22 +222,22 @@ function VerdictCard({ result }) {
           <div className="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden flex">
             {sorted.map((item) => (
               item.value > 0 && (
-                <div key={item.label} className={`h-full ${item.color} transition-all duration-500`} style={{ width: `${item.value * 100}%` }} />
+                <div key={item.label} className={`h-full ${item.color} transition-all duration-700 ease-out`} style={{ width: `${item.value * 100}%` }} />
               )
             ))}
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-3 mt-5">
-          <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-3">
+          <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-3 transition-all duration-200 hover:shadow-md hover:shadow-primary-500/5">
             <div className="text-xs text-[var(--text-muted)] mb-1">Positive</div>
             <div className="font-display text-lg font-bold text-primary-500">{positivePct}%</div>
           </div>
-          <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-3">
+          <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-3 transition-all duration-200 hover:shadow-md hover:shadow-amber-500/5">
             <div className="text-xs text-[var(--text-muted)] mb-1">Neutral</div>
             <div className="font-display text-lg font-bold text-amber-500">{neutralPct}%</div>
           </div>
-          <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-3">
+          <div className="bg-[var(--bg)] border border-[var(--border)] rounded-xl p-3 transition-all duration-200 hover:shadow-md hover:shadow-red-500/5">
             <div className="text-xs text-[var(--text-muted)] mb-1">Negative</div>
             <div className="font-display text-lg font-bold text-red-500">{negativePct}%</div>
           </div>
@@ -229,9 +248,24 @@ function VerdictCard({ result }) {
 }
 
 function HistoryTable({ results, filterLabel, setFilterLabel, fetchResults }) {
+  const [visibleRows, setVisibleRows] = useState(new Set())
+  const prevResultsRef = useRef([])
+
   useEffect(() => {
     fetchResults()
   }, [fetchResults])
+
+  useEffect(() => {
+    if (results.length !== prevResultsRef.current.length) {
+      setVisibleRows(new Set())
+      results.forEach((_, index) => {
+        setTimeout(() => {
+          setVisibleRows((prev) => new Set([...prev, index]))
+        }, index * 50)
+      })
+      prevResultsRef.current = results
+    }
+  }, [results])
 
   const filteredResults = filterLabel
     ? results.filter((r) => r.label === filterLabel)
@@ -240,13 +274,13 @@ function HistoryTable({ results, filterLabel, setFilterLabel, fetchResults }) {
   return (
     <div className="max-w-3xl mx-auto px-4 mb-16">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-display text-xl font-semibold">Classification History</h2>
+        <h2 className="font-display text-xl font-semibold tracking-tight">Classification History</h2>
         <div className="flex items-center gap-2">
           <span className="font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider">Filter By:</span>
           <select
             value={filterLabel}
             onChange={(e) => setFilterLabel(e.target.value)}
-            className="px-3 py-1.5 text-xs font-mono bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 text-[var(--text)] transition-colors cursor-pointer"
+            className="px-3 py-1.5 text-xs font-mono bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 text-[var(--text)] transition-all duration-200 cursor-pointer hover:border-[var(--primary)]"
           >
             <option value="">All Labels</option>
             <option value="positive">Positive</option>
@@ -262,7 +296,7 @@ function HistoryTable({ results, filterLabel, setFilterLabel, fetchResults }) {
           <p className="text-[var(--text-muted)] text-sm mt-1">Classify some text above to see results here</p>
         </div>
       ) : (
-        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl overflow-hidden">
+        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-lg shadow-black/5 dark:shadow-black/20">
           <table className="w-full">
             <thead>
               <tr className="border-b border-[var(--border)]">
@@ -273,10 +307,16 @@ function HistoryTable({ results, filterLabel, setFilterLabel, fetchResults }) {
               </tr>
             </thead>
             <tbody>
-              {filteredResults.map((item) => {
+              {filteredResults.map((item, index) => {
                 const lc = LABEL_COLORS[item.label] || LABEL_COLORS.neutral
+                const isVisible = visibleRows.has(index)
                 return (
-                  <tr key={item.id} className="border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--bg)]/50 transition-colors">
+                  <tr
+                    key={item.id}
+                    className={`border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--bg)]/50 transition-all duration-300 ${
+                      isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
+                    }`}
+                  >
                     <td className="px-5 py-3.5 text-sm truncate max-w-[200px]" title={item.text}>{item.text}</td>
                     <td className="px-5 py-3.5">
                       <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-mono font-medium ${lc.bg} ${lc.text}`}>
@@ -288,7 +328,7 @@ function HistoryTable({ results, filterLabel, setFilterLabel, fetchResults }) {
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-xs text-[var(--text-muted)]">{(item.confidence * 100).toFixed(1)}%</span>
                         <div className="w-16 h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full ${lc.bar}`} style={{ width: `${item.confidence * 100}%` }} />
+                          <div className={`h-full rounded-full ${lc.bar} transition-all duration-500`} style={{ width: `${item.confidence * 100}%` }} />
                         </div>
                       </div>
                     </td>
@@ -309,7 +349,7 @@ function HistoryTable({ results, filterLabel, setFilterLabel, fetchResults }) {
 function Footer() {
   return (
     <footer className="max-w-3xl mx-auto px-4 py-6 border-t border-[var(--border)]">
-      <p className="font-mono text-xs text-[var(--text-muted)]">
+      <p className="font-mono text-xs text-[var(--text-muted)] text-center">
         Roman Urdu Text Classifier &copy; 2026
       </p>
     </footer>
@@ -368,7 +408,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors duration-300">
       <div className="max-w-5xl mx-auto">
         <Header dark={dark} setDark={setDark} />
         <Hero />
