@@ -111,7 +111,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:5173",
         "https://romanurdu-ai.onrender.com",
-    ]
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
