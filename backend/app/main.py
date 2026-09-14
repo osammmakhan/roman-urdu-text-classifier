@@ -107,7 +107,11 @@ async def log_requests(request: Request, call_next):
 # CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # React dev servers
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "https://romanurdu-ai.onrender.com",
+    ]
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
