@@ -5,7 +5,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api'
 const SAMPLE_PROMPTS = [
   '"achha din hai"',
   '"yeh theek thak hai"',
-  '"bhai yeh product bilkul bakwaas hai"',
+  '"yeh product bilkul bakwaas hai"',
 ]
 
 const LABEL_COLORS = {
@@ -38,14 +38,7 @@ function useTheme() {
 }
 
 function LogoIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="14" cy="14" r="3" fill="var(--primary)" />
-      <ellipse cx="14" cy="14" rx="12" ry="5" stroke="var(--primary)" strokeWidth="1.5" fill="none" />
-      <ellipse cx="14" cy="14" rx="12" ry="5" stroke="var(--primary)" strokeWidth="1.5" fill="none" transform="rotate(60 14 14)" />
-      <ellipse cx="14" cy="14" rx="12" ry="5" stroke="var(--primary)" strokeWidth="1.5" fill="none" transform="rotate(120 14 14)" />
-    </svg>
-  )
+  return <img src="/favicon.svg" alt="RomanUrdu.ai" className="w-7 h-7" />
 }
 
 function Header({ dark, setDark }) {
